@@ -1,0 +1,6 @@
+spring:
+    application:
+        name: bridge-dev
+
+repositories:
+    url: https://api.github.com/search/repositories
