@@ -5,16 +5,26 @@ interface GitListItemProps {
   id: number;
   name: String;
   stars: number;
+  description: String;
+  login: String;
   forks: number;
   watchers: number;
+  open_issues: number
+  language: String 
+  created_at:String
 }
 
 export const GitListItem = (props: GitListItemProps) => {
   const theme = useTheme();
   const [clicked, setClicked] = useState(false);
+  const [expanded, setExpanded] = useState(false);
 
-  const onClicked = () => {
+  const onFavClicked = () => {
     setClicked(!clicked);
+  };
+
+  const onExpandedClicked = () => {
+    setExpanded(!expanded);
   };
 
   return (
@@ -31,46 +41,55 @@ export const GitListItem = (props: GitListItemProps) => {
         <VFlow vSpacing={0}>
           <Heading level={3}>{props.name}</Heading>
           <HFlow hSpacing={6}>
-            <VFlow vSpacing={0}>
+            <VFlow vSpacing={0.3}>
               <HFlow hSpacing={0.5}>
-                <Text fontWeight="bold">Stars</Text>
+              <Icon icon = 'userFilled' size={1}></Icon>
+                <Text>{props.login}</Text>
+              </HFlow>
+              <HFlow hSpacing={0.5}>
+                <Icon icon = 'starFilled' size={1}></Icon>
                 <Text>{props.stars}</Text>
               </HFlow>
               <HFlow hSpacing={0.5}>
-                <Text fontWeight="bold">Forks</Text>
+                <Text fontWeight="bold">Description:</Text>
+                <Text>{props.description}</Text>
+              </HFlow>
+
+              {expanded ? (
+                <VFlow vSpacing={0.5}>
+                <HFlow hSpacing={0.5}>
+                <Text fontWeight="bold">Forks:</Text>
                 <Text>{props.forks}</Text>
               </HFlow>
               <HFlow hSpacing={0.5}>
-                <Text fontWeight="bold">Watchers</Text>
+                <Text fontWeight="bold">Watchers:</Text>
                 <Text>{props.watchers}</Text>
               </HFlow>
+              <HFlow hSpacing={0.5}>
+                <Text fontWeight="bold">Open Issues:</Text>
+                <Text>{props.open_issues}</Text>
+              </HFlow>
+              <HFlow hSpacing={0.5}>
+                <Text fontWeight="bold">Language:</Text>
+                <Text>{props.language}</Text>
+              </HFlow>
+              <HFlow hSpacing={0.5}>
+                <Text fontWeight="bold">Created at:</Text>
+                <Text>{props.created_at}</Text>
+              </HFlow>
+
+                </VFlow>
+              ) : null}
+              
             </VFlow>
           </HFlow>
         </VFlow>
-        <VFlow>
-          <Button
-            kind="normal"
-            skin="outline"
-            size="small"
-            style={{ height: 32, width: 114 }}
-          >
-            <Icon icon="zoomOutline" style={{ marginRight: "0.5rem" }} />
-            Visualizar
+
+        <HFlow>
+          <Button onClick={onExpandedClicked} skin="ghost" size="small">
+            <Icon icon={expanded ? "angleDown" : "angleUp"}></Icon>
           </Button>
-          <Button
-            kind="normal"
-            skin="outline"
-            size="small"
-            style={{ height: 32, width: 114 }}
-            onClick={onClicked}
-          >
-            <Icon
-              icon={clicked ? "starFilled" : "starOutline"}
-              style={{ marginRight: "0.5rem" }}
-            />
-            Favoritar
-          </Button>
-        </VFlow>
+        </HFlow>
       </HFlow>
     </>
   );

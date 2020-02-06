@@ -4,17 +4,15 @@ import {
   TextField,
   Button,
   Icon,
-  Grid,
-  Cell,
   HFlow,
-  Heading,
   Text
 } from "bold-ui";
 import { GitListItem } from "./GitListItem";
 
 export const GitList = () => {
   const [repositories, setRepositories] = useState([
-    { id: 0, name: "", stargazers_count: 0, forks: 0, watchers: 0 }
+    { id: 0, name: "-", description: "-", stargazers_count: 0, forks: 0, 
+    watchers: 0, owner: {login: ""}, open_issues: 0, language: "-", created_at:"-"}
   ]);
 
   async function fetchRep() {
@@ -28,7 +26,7 @@ export const GitList = () => {
   }, []);
 
   return (
-    <VFlow style={{ margin: "50px 50px 50px 50px" }}>
+    <VFlow style={{ margin: "3.12rem 3.12rem 3.12rem 3.12rem" }}>
       <VFlow>
         <Text fontWeight="bold" fontSize={3}>
           Bridge Dev
@@ -37,14 +35,14 @@ export const GitList = () => {
       <HFlow alignItems="center" hSpacing={2}>
         <TextField
           maxLength={200}
-          style={{ width: "98.5rem", fontSize: "1.6rem" }}
+          style={{ width: "58.5rem", fontSize: "1.6rem" }}
           placeholder="Buscar repositório"
         />
         <Button
           kind="primary"
           skin="default"
           size="medium"
-          style={{ height: 46 }}
+          style={{ height: 46,  }}
         >
           <Icon icon="zoomOutline" style={{ marginRight: "0.5rem" }} />
           Buscar
@@ -58,6 +56,11 @@ export const GitList = () => {
           stars={repo.stargazers_count}
           forks={repo.forks}
           watchers={repo.watchers}
+          description={repo.description}
+          login= {repo.owner.login}
+          open_issues= {repo.open_issues}
+          language= {repo.language}
+          created_at= {repo.created_at}
         />
       ))}
     </VFlow>
