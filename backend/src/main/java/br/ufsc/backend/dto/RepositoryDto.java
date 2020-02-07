@@ -2,6 +2,7 @@ package br.ufsc.backend.dto;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.ToString;
 
@@ -64,6 +65,7 @@ public class RepositoryDto {
 	}
 
 	@JsonProperty("createdAt")
+	@JsonFormat(pattern="dd-MM-yyyy")
 	public Date getCreatedAt() {
 		return createdAt;
 	}

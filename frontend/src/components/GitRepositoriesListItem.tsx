@@ -1,5 +1,5 @@
 import { Button, Heading, HFlow, Icon, Text, useTheme, VFlow } from "bold-ui";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export type GitRepositories = {
   totalCount: number;
@@ -22,23 +22,33 @@ export type GitRepositoriesItem = {
   createdAt: String;
   stargazersCount: String;
 };
-export interface GitListItemProps {
+export interface GitRepositoriesListItemProps {
   item: GitRepositoriesItem;
 }
 
-export const GitListItem = (props: GitListItemProps) => {
+export const GitRepositoriesListItem = (
+  props: GitRepositoriesListItemProps
+) => {
   const theme = useTheme();
-  const [clicked, setClicked] = useState(false);
+  const [favorite, favClicked] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  const [repositories, setRepositories] = useState();
   const { item } = props;
 
   const onFavClicked = () => {
-    setClicked(!clicked);
+    favClicked(!favorite);
   };
 
   const onExpandedClicked = () => {
     setExpanded(!expanded);
   };
+
+  useEffect(() => {
+    fetch(`/api/user_repositories?name=`)
+      .then(response => response.json())
+      .then(data => setRepositories(data))
+      .catch(response => console.log("Ocorreu algum erro.", response));
+  }, []);
 
   return (
     <>
@@ -98,7 +108,7 @@ export const GitListItem = (props: GitListItemProps) => {
 
         <HFlow>
           <Button onClick={onExpandedClicked} skin="ghost" size="small">
-            <Icon icon={expanded ? "angleDown" : "angleUp"}></Icon>
+            <Icon icon={expanded ? "angleUp" : "angleDown"}></Icon>
           </Button>
         </HFlow>
       </HFlow>

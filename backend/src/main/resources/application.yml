@@ -4,3 +4,6 @@ spring:
 
 repositories:
     url: https://api.github.com/search/repositories
+
+userRepositories:
+    url: https://api.github.com/users/

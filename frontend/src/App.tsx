@@ -1,8 +1,8 @@
 import React from "react";
-import { GitList } from "./components/GitList";
+import { GitRepositoriesList } from "./components/GitRepositoriesList";
 
 const App = () => {
-  return <GitList />;
+  return <GitRepositoriesList />;
 };
 
 export default App;

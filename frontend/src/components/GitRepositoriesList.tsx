@@ -1,23 +1,20 @@
 import { Button, HFlow, Icon, Text, TextField, VFlow } from "bold-ui";
 import React, { useEffect, useState } from "react";
-import { GitListItem, GitRepositories } from "./GitListItem";
+import {
+  GitRepositoriesListItem,
+  GitRepositories
+} from "./GitRepositoriesListItem";
 
-export const GitList = () => {
+export const GitRepositoriesList = () => {
   const [repositories, setRepositories] = useState<GitRepositories>();
-
-  async function fetchRep() {
-    const response = await fetch(`https://api.github.com/users/diego3g/repos`);
-    const data = await response.json();
-    setRepositories(data);
-  }
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    fetch("/api/repositories?name=bold")
+    fetch(`/api/repositories?name=${inputValue}`)
       .then(response => response.json())
       .then(data => setRepositories(data))
-      .catch(response => console.log("Deu xabu", response));
-    // fetchRep();
-  }, []);
+      .catch(response => console.log("Ocorreu algum erro.", response));
+  }, [inputValue, setInputValue]);
 
   if (repositories) {
     return (
@@ -32,6 +29,8 @@ export const GitList = () => {
             maxLength={200}
             style={{ width: "58.5rem", fontSize: "1.6rem" }}
             placeholder="Buscar repositório"
+            value={inputValue}
+            onChange={e => setInputValue(e.target.value)}
           />
           <Button
             kind="primary"
@@ -44,9 +43,13 @@ export const GitList = () => {
           </Button>
         </HFlow>
 
-        {repositories?.items.map(repo => (
-          <GitListItem key={repo.id} item={repo} />
-        ))}
+        {repositories?.items?.length > 0 ? (
+          repositories?.items.map(repo => (
+            <GitRepositoriesListItem key={repo.id} item={repo} />
+          ))
+        ) : (
+          <Text>Nenhum resultado encontrado.</Text>
+        )}
       </VFlow>
     );
   } else {
