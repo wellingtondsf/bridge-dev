@@ -42,9 +42,9 @@ public class RepositoriesInfoController {
 	}
 
 	@GetMapping("/user_repositories")
-	public ResponseEntity<SimpleRepositoryDto[]> getUserRepositories(@RequestParam("name") String name) {
+	public ResponseEntity<SimpleRepositoryDto[]> getUserRepositories(@RequestParam("user") String user) {
 
-		ResponseEntity<SimpleRepositoryDto[]> forEntity = restTemplate.getForEntity(userRepoUrl+name+"/repos", SimpleRepositoryDto[].class);
+		ResponseEntity<SimpleRepositoryDto[]> forEntity = restTemplate.getForEntity(userRepoUrl+user+"/repos", SimpleRepositoryDto[].class);
 
 		if (forEntity.getBody() != null) {
 			return ResponseEntity.ok(forEntity.getBody());

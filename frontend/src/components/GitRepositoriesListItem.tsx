@@ -1,9 +1,14 @@
 import { Button, Heading, HFlow, Icon, Text, useTheme, VFlow } from "bold-ui";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 export type GitRepositories = {
   totalCount: number;
   items: GitRepositoriesItem[];
+};
+
+type GitSimpleRepositoriesItem = {
+  id: number;
+  repositoryName: String;
 };
 
 export type GitRepositoriesOwner = {
@@ -32,8 +37,11 @@ export const GitRepositoriesListItem = (
   const theme = useTheme();
   const [favorite, favClicked] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [repositories, setRepositories] = useState();
+  const [repositories, setRepositories] = useState<
+    GitSimpleRepositoriesItem[]
+  >();
   const { item } = props;
+  const user = item.owner.login;
 
   const onFavClicked = () => {
     favClicked(!favorite);
@@ -41,14 +49,11 @@ export const GitRepositoriesListItem = (
 
   const onExpandedClicked = () => {
     setExpanded(!expanded);
-  };
-
-  useEffect(() => {
-    fetch(`/api/user_repositories?name=`)
+    fetch(`/api/user_repositories?user=${user}`)
       .then(response => response.json())
       .then(data => setRepositories(data))
       .catch(response => console.log("Ocorreu algum erro.", response));
-  }, []);
+  };
 
   return (
     <>
@@ -74,7 +79,7 @@ export const GitRepositoriesListItem = (
                 <Text>{item.stargazersCount}</Text>
               </HFlow>
               <HFlow hSpacing={0.5}>
-                <Text fontWeight="bold">Description:</Text>
+                <Text fontWeight="bold">Descrição:</Text>
                 <Text>{item.description}</Text>
               </HFlow>
 
@@ -89,17 +94,32 @@ export const GitRepositoriesListItem = (
                     <Text>{item.watchers}</Text>
                   </HFlow>
                   <HFlow hSpacing={0.5}>
-                    <Text fontWeight="bold">Open Issues:</Text>
+                    <Text fontWeight="bold">Issues abertas:</Text>
                     <Text>{item.openIssues}</Text>
                   </HFlow>
                   <HFlow hSpacing={0.5}>
-                    <Text fontWeight="bold">Language:</Text>
+                    <Text fontWeight="bold">Linguagem principal:</Text>
                     <Text>{item.language}</Text>
                   </HFlow>
                   <HFlow hSpacing={0.5}>
-                    <Text fontWeight="bold">Created at:</Text>
+                    <Text fontWeight="bold">Criado em:</Text>
                     <Text>{item.createdAt}</Text>
                   </HFlow>
+                  <Text fontWeight="bold">Outros repositórios do autor:</Text>
+
+                  {repositories != null ? (
+                    repositories.map(repo => (
+                      <Text
+                        key={repo.id}
+                        fontWeight="bold"
+                        style={{ marginLeft: "1rem" }}
+                      >
+                        • {repo.repositoryName}
+                      </Text>
+                    ))
+                  ) : (
+                    <Text>Nenhum resultado encontrado.</Text>
+                  )}
                 </VFlow>
               ) : null}
             </VFlow>

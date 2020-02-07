@@ -1,58 +1,39 @@
-import { Button, HFlow, Icon, Text, TextField, VFlow } from "bold-ui";
-import React, { useEffect, useState } from "react";
+import { HFlow, Text, VFlow } from "bold-ui";
+import React from "react";
 import {
   GitRepositoriesListItem,
   GitRepositories
 } from "./GitRepositoriesListItem";
 
-export const GitRepositoriesList = () => {
-  const [repositories, setRepositories] = useState<GitRepositories>();
-  const [inputValue, setInputValue] = useState("");
+export interface GitRepositoriesListProps {
+  repo: GitRepositories;
+}
 
-  useEffect(() => {
-    fetch(`/api/repositories?name=${inputValue}`)
-      .then(response => response.json())
-      .then(data => setRepositories(data))
-      .catch(response => console.log("Ocorreu algum erro.", response));
-  }, [inputValue, setInputValue]);
+export const GitRepositoriesList = (props: GitRepositoriesListProps) => {
+  return (
+    <VFlow>
+      <HFlow>
+        <Text fontSize={1.5}>
+          Repositórios
+          {props.repo?.totalCount != null ? (
+            <Text fontSize={1} style={{ marginLeft: "1rem" }}>
+              {props.repo.totalCount === 1
+                ? props.repo.totalCount + " repositorio encontrado"
+                : props.repo.totalCount + " repositorios encontrados"}
+            </Text>
+          ) : null}
+        </Text>
+      </HFlow>
 
-  if (repositories) {
-    return (
-      <VFlow style={{ margin: "3.12rem 3.12rem 3.12rem 3.12rem" }}>
-        <VFlow>
-          <Text fontWeight="bold" fontSize={3}>
-            Bridge Dev
-          </Text>
-        </VFlow>
-        <HFlow alignItems="center" hSpacing={2}>
-          <TextField
-            maxLength={200}
-            style={{ width: "58.5rem", fontSize: "1.6rem" }}
-            placeholder="Buscar repositório"
-            value={inputValue}
-            onChange={e => setInputValue(e.target.value)}
-          />
-          <Button
-            kind="primary"
-            skin="default"
-            size="medium"
-            style={{ height: 46 }}
-          >
-            <Icon icon="zoomOutline" style={{ marginRight: "0.5rem" }} />
-            Buscar
-          </Button>
+      {props.repo?.items != null ? (
+        props.repo?.items.map(repo => (
+          <GitRepositoriesListItem key={repo.id} item={repo} />
+        ))
+      ) : (
+        <HFlow alignItems="center" style={{ textAlign: "center" }}>
+          <Text>Nenhum repositorio encontrado.</Text>
         </HFlow>
-
-        {repositories?.items?.length > 0 ? (
-          repositories?.items.map(repo => (
-            <GitRepositoriesListItem key={repo.id} item={repo} />
-          ))
-        ) : (
-          <Text>Nenhum resultado encontrado.</Text>
-        )}
-      </VFlow>
-    );
-  } else {
-    return null;
-  }
+      )}
+    </VFlow>
+  );
 };
