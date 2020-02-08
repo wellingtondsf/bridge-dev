@@ -1,4 +1,4 @@
-import { HFlow, Text, VFlow } from "bold-ui";
+import { HFlow, Text, VFlow, Paginator } from "bold-ui";
 import React from "react";
 import {
   GitRepositoriesListItem,
@@ -34,6 +34,11 @@ export const GitRepositoriesList = (props: GitRepositoriesListProps) => {
           <Text>Nenhum repositorio encontrado.</Text>
         </HFlow>
       )}
+      {props.repo?.items?.length > 0 ? (
+        <VFlow style={{ textAlign: "center" }}>
+          <Paginator page={0} total={10} />
+        </VFlow>
+      ) : null}
     </VFlow>
   );
 };

@@ -105,7 +105,9 @@ export const GitRepositoriesListItem = (
                     <Text fontWeight="bold">Criado em:</Text>
                     <Text>{item.createdAt}</Text>
                   </HFlow>
-                  <Text fontWeight="bold">Outros repositórios do autor:</Text>
+                  <Text fontWeight="bold">
+                    Alguns outros repositórios do autor:
+                  </Text>
 
                   {repositories != null ? (
                     repositories.map(repo => (

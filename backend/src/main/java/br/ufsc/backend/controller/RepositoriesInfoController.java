@@ -27,11 +27,14 @@ public class RepositoriesInfoController {
 	private String userRepoUrl;
 
 	@GetMapping("/repositories")
-	public ResponseEntity<RepositoryContainerDto> getRepositories(@RequestParam("name") String name) {
+	public ResponseEntity<RepositoryContainerDto> getRepositories( String name, String language,String user) {
 
-		//pegar parametros, verificar se nao estao null e adicionar na consultas
+		String nameFilter = name != "" ? name.trim() : "";
+		String languageFilter = language!= "" ? "+language:" + language.trim(): "";
+		String userFilter = user!= "" ? "+user:" + user.trim(): "";
 
-		ResponseEntity<RepositoryContainerDto> forEntity = restTemplate.getForEntity(repoUrl+"?q="+name, RepositoryContainerDto.class);
+
+		ResponseEntity<RepositoryContainerDto> forEntity = restTemplate.getForEntity(repoUrl+"?q="+nameFilter+languageFilter+userFilter, RepositoryContainerDto.class);
 
 		if (forEntity.getBody() != null) {
 			return ResponseEntity.ok(forEntity.getBody());

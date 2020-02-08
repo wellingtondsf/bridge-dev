@@ -11,11 +11,13 @@ export const GitRepositoriesView = () => {
   });
   const theme = useTheme();
 
-  const onBuscarClicked = (repo: String) => {
-    fetch(`/api/repositories?name=${repo}`)
-      .then(response => response.json())
-      .then(data => setRepositories(data))
-      .catch(response => console.log("Ocorreu algum erro.", response));
+  const onBuscarClicked = (repo: String, language: String, user: String) => {
+    if (repo !== "" || language !== "" || user !== "") {
+      fetch(`/api/repositories?name=${repo}&language=${language}&user=${user}`)
+        .then(response => response.json())
+        .then(data => setRepositories(data))
+        .catch(response => console.log("Ocorreu algum erro.", response));
+    }
   };
 
   return (

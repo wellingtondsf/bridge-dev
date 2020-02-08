@@ -11,17 +11,16 @@ import {
 } from "bold-ui";
 
 export interface GitRepositoriesFormProps {
-  handleSubmit(repo: String): void;
+  handleSubmit(repo: String, language: String, user: String): void;
 }
 
 export const GitRepositoriesForm = (props: GitRepositoriesFormProps) => {
   const [repositoryValue, setRepositoryValue] = useState("");
+  const [languageValue, setLanguageValue] = useState("");
+  const [userValue, setUserValue] = useState("");
 
   const onBuscarClicked = () => {
-    if (repositoryValue && repositoryValue !== "") {
-      props.handleSubmit(repositoryValue);
-    } else {
-    }
+    props.handleSubmit(repositoryValue, languageValue, userValue);
   };
 
   return (
@@ -46,16 +45,22 @@ export const GitRepositoriesForm = (props: GitRepositoriesFormProps) => {
               name={"buscaCidadaoDiltro"}
             />
           </Cell>
-          <Cell md={1}>
-            <TextField name={"estrelasFiltro"} label="Estrelas" />
-          </Cell>
-          <Cell md={1}>
-            <TextField name={"forksFiltro"} label="Forks" />
-          </Cell>
           <Cell md={3}>
-            <TextField name={"linguagemFiltro"} label="Linguagem principal" />
+            <TextField
+              name={"userFiltro"}
+              label="Usuário"
+              onChange={e => setUserValue(e.target.value)}
+            />
           </Cell>
-          <Cell alignSelf="flex-end" md={6}>
+
+          <Cell md={3}>
+            <TextField
+              name={"linguagemFiltro"}
+              label="Linguagem principal"
+              onChange={e => setLanguageValue(e.target.value)}
+            />
+          </Cell>
+          <Cell alignSelf="flex-end" md={5}>
             <HFlow alignItems={"flex-end"}>
               <Button kind="normal" skin="outline" size="small">
                 Limpar filtros
