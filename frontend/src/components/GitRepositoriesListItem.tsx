@@ -29,6 +29,7 @@ export type GitRepositoriesItem = {
 };
 export interface GitRepositoriesListItemProps {
   item: GitRepositoriesItem;
+  handleAddRemoveFavorite(item: GitRepositoriesItem, favorite: boolean): void;
 }
 
 export const GitRepositoriesListItem = (
@@ -43,11 +44,12 @@ export const GitRepositoriesListItem = (
   const { item } = props;
   const user = item.owner.login;
 
-  const onFavClicked = () => {
+  const handleFavClicked = () => {
     favClicked(!favorite);
+    props.handleAddRemoveFavorite(item, favorite);
   };
 
-  const onExpandedClicked = () => {
+  const handleExpandedClicked = () => {
     setExpanded(!expanded);
     fetch(`/api/user_repositories?user=${user}`)
       .then(response => response.json())
@@ -67,7 +69,21 @@ export const GitRepositoriesListItem = (
         }}
       >
         <VFlow vSpacing={0}>
-          <Heading level={3}>{item.repositoryName}</Heading>
+          <HFlow alignItems="center" hSpacing={0}>
+            <Heading level={3}>{item.repositoryName}</Heading>
+            <Button
+              skin="ghost"
+              size="small"
+              style={{ height: "1.5rem" }}
+              onClick={handleFavClicked}
+            >
+              <Icon
+                icon={favorite === true ? "heartFilled" : "heartOutline"}
+                size={1}
+                color={favorite === true ? "#F02532" : ""}
+              />
+            </Button>
+          </HFlow>
           <HFlow hSpacing={6}>
             <VFlow vSpacing={0.3}>
               <HFlow hSpacing={0.5}>
@@ -129,7 +145,7 @@ export const GitRepositoriesListItem = (
         </VFlow>
 
         <HFlow>
-          <Button onClick={onExpandedClicked} skin="ghost" size="small">
+          <Button onClick={handleExpandedClicked} skin="ghost" size="small">
             <Icon icon={expanded ? "angleUp" : "angleDown"}></Icon>
           </Button>
         </HFlow>

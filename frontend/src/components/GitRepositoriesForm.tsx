@@ -1,83 +1,105 @@
 import React, { useState } from "react";
-import {
-  VFlow,
-  Grid,
-  Cell,
-  TextField,
-  Button,
-  Icon,
-  Text,
-  HFlow
-} from "bold-ui";
+import { Grid, Cell, TextField, Button, Icon, HFlow } from "bold-ui";
 
 export interface GitRepositoriesFormProps {
-  handleSubmit(repo: String, language: String, user: String): void;
+  handleSubmit(
+    repo: string,
+    language: string,
+    user: string,
+    page?: number
+  ): void;
 }
 
 export const GitRepositoriesForm = (props: GitRepositoriesFormProps) => {
-  const [repositoryValue, setRepositoryValue] = useState("");
-  const [languageValue, setLanguageValue] = useState("");
-  const [userValue, setUserValue] = useState("");
+  const [formState, setFormState] = useState({
+    repository: "",
+    language: "",
+    user: ""
+  });
 
-  const onBuscarClicked = () => {
-    props.handleSubmit(repositoryValue, languageValue, userValue);
+  const handleChange = (name: string) => (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const el = e.target;
+
+    setFormState(state => ({
+      ...state,
+      [name]: el.value
+    }));
+  };
+
+  const handleBuscarClicked = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    props.handleSubmit(
+      formState.repository,
+      formState.language,
+      formState.user
+    );
+  };
+
+  const handleClearValuesClicked = () => {
+    setFormState({
+      repository: "",
+      language: "",
+      user: ""
+    });
   };
 
   return (
     <>
-      <VFlow style={{ textAlign: "center" }}>
-        <Text fontWeight="bold" fontSize={3}>
-          Bridge Dev
-        </Text>
-      </VFlow>
-      <VFlow
-        style={{
-          paddingBottom: "1rem"
-        }}
-      >
+      <form onSubmit={handleBuscarClicked}>
         <Grid>
           <Cell md={12}>
             <TextField
               label="Buscar repositório"
-              maxLength={200}
-              style={{ fontSize: "1.5rem" }}
-              onChange={e => setRepositoryValue(e.target.value)}
-              name={"buscaCidadaoDiltro"}
+              style={{ fontSize: "1.5rem", borderRadius: "15px" }}
+              onChange={handleChange("repository")}
+              value={formState.repository}
+              name={"repository"}
+              clearable={false}
             />
           </Cell>
-          <Cell md={3}>
+          <Cell md={5}>
             <TextField
-              name={"userFiltro"}
+              name={"user"}
               label="Usuário"
-              onChange={e => setUserValue(e.target.value)}
+              style={{ fontSize: "1.5rem", borderRadius: "15px" }}
+              onChange={handleChange("user")}
+              value={formState.user}
+              clearable={false}
             />
           </Cell>
-
-          <Cell md={3}>
+          <Cell md={5}>
             <TextField
-              name={"linguagemFiltro"}
+              name={"language"}
               label="Linguagem principal"
-              onChange={e => setLanguageValue(e.target.value)}
+              style={{ fontSize: "1.5rem", borderRadius: "15px" }}
+              onChange={handleChange("language")}
+              value={formState.language}
+              clearable={false}
             />
           </Cell>
-          <Cell alignSelf="flex-end" md={5}>
-            <HFlow alignItems={"flex-end"}>
-              <Button kind="normal" skin="outline" size="small">
+          <HFlow alignItems={"flex-end"}>
+            <Cell alignSelf="flex-end" md={12}>
+              <Button
+                kind="normal"
+                skin="outline"
+                size="medium"
+                type="reset"
+                onClick={handleClearValuesClicked}
+              >
                 Limpar filtros
               </Button>
-              <Button
-                kind="primary"
-                skin="default"
-                size="small"
-                onClick={onBuscarClicked}
-              >
+            </Cell>
+            <Cell>
+              <Button kind="primary" skin="default" size="medium" type="submit">
                 <Icon icon="zoomOutline" style={{ marginRight: "0.5rem" }} />
                 Buscar
               </Button>
-            </HFlow>
-          </Cell>
+            </Cell>
+          </HFlow>
         </Grid>
-      </VFlow>
+      </form>
     </>
   );
 };
